@@ -288,8 +288,8 @@ Esto es **optimización cuadrática** (programación matemática).
 **Definición clave:**
 
 "Un portafolio A DOMINA a un portafolio B si:
-- Mayor retorno y mismo riesgo, O
-- Mismo retorno y menor riesgo, O
+- Mayor retorno Y mismo riesgo, O
+- Mismo retorno Y menor riesgo, O
 - Mayor retorno Y menor riesgo
 
 Los activos individuales son DOMINADOS por portafolios en la frontera."
@@ -330,10 +330,10 @@ $SR_B$ = (10% - 5%) / 15% = 0.33
 Portafolio A es mejor (mayor Sharpe)."
 
 **Reglas prácticas:**
-- SR < 0.5: Pobre
+- SR $<$ 0.5: Pobre
 - SR 0.5 - 1.0: Bueno
 - SR 1.0 - 2.0: Muy bueno
-- SR > 2.0: Excelente (raro)
+- SR $>$ 2.0: Excelente (raro)
 
 **4.2 Portafolio de máximo Sharpe**
 
@@ -485,7 +485,7 @@ PERO hacen el portafolio más práctico e implementable.
 Tradeoff: teoría vs práctica."
 
 **Otras restricciones comunes:**
-- Límites de concentración: $w_{i} \leq$ 20%
+- Límites de concentración: $w_{i} \leq 20$%
 - Restricciones sectoriales: suma de pesos por sector
 - Mínimo de posiciones: $w_{i} = 0$ o $w_{i} \geq 5$% (no micro-posiciones)
 - Turnover limits: cuánto puedes cambiar de un periodo a otro
@@ -534,7 +534,7 @@ Sharpe: 0.62
 
 "El desempeño real es PEOR que el esperado. ¿Por qué?
 
-1. **Error de estimación:**  $\mu$ y $\Sigma$ estimados tienen error
+1. **Error de estimación:** $\mu$ y $\Sigma$ estimados tienen error
 2. **Cambios estructurales:** Correlaciones cambian en crisis
 3. **Eventos imprevistos:** COVID, guerra, etc.
 4. **Sesgo de optimización:** Maximizar Sharpe tiende a sobreestimar"
@@ -596,7 +596,7 @@ Ahora tienes ~54% WALMEX, ~46% CEMEX
 1. Diversificación reduce riesgo (matemáticamente probado)
 2. Frontera eficiente muestra portafolios óptimos
 3. Sharpe Ratio permite comparar portafolios
-4. Correlaciones bajas → mayor beneficio
+4. Correlaciones bajas $\rightarrow$ mayor beneficio
 5. Restricciones prácticas reducen Sharpe pero hacen portafolios implementables
 
 **PRÓXIMA SESIÓN: CAPM**
@@ -647,7 +647,6 @@ w_Y_min <- w_Y[idx_min]  # ≈ 0.46
 # d) ρ = 0.2 da MÁS beneficio que ρ = 0.8
 # (curva más hacia la izquierda)
 ```
-
 ### Ejercicio 3 (estructura):
 
 ```r
@@ -675,9 +674,7 @@ plot(frontera$Riesgo, frontera$Retorno)
 points(sqrt(diag(Sigma)), mu)  # Activos
 points(sqrt(t(w_GMV) %*% Sigma %*% w_GMV), sum(w_GMV * mu))  # GMV
 ```
-
 ---
-
 ## PROBLEMAS COMUNES Y SOLUCIONES
 
 ### Problema 1: solve.QP falla
@@ -738,8 +735,8 @@ Eventualmente veremos modelos más sofisticados."
 **Tema:** CAPM y Modelos Factoriales (repasar de forma autodidácta)
 
 **Conexión:**
-"Markowitz → cómo invertir  
-CAPM → qué deberían ser los precios en equilibrio"
+"Markowitz $\rightarrow$ cómo invertir  
+CAPM $\rightarrow$ qué deberían ser los precios en equilibrio"
 
 **Materiales:**
 - Datos del IPC (mercado)
@@ -749,4 +746,3 @@ CAPM → qué deberían ser los precios en equilibrio"
 ---
 
 ¡Esta es una de las sesiones más importantes del curso! Es IMPORTANTE tomarse el tiempo para entender bien la intuición de la diversificación.
-
