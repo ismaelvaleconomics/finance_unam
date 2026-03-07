@@ -343,14 +343,14 @@ Ejecute Parte 8 del script.
 
 "De TODOS los portafolios en la frontera eficiente, hay uno especial: el que maximiza el Sharpe.
 
-Se llama PORTAFOLIO TANGENTE porque es tangente a una línea desde r_f."
+Se llama PORTAFOLIO TANGENTE porque es tangente a una línea desde $r_{f}$."
 
 **Mostrar gráfica con CML.**
 
 **Capital Market Line (CML):**
 
 "Esta línea verde representa combinaciones de:
-- Activo libre de riesgo (r_f)
+- Activo libre de riesgo ($r_{f}$)
 - Portafolio tangente
 
 ¿Por qué es importante?
