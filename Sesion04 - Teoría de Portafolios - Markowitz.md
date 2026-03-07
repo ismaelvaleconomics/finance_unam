@@ -322,10 +322,10 @@ Esta fórmula ayuda a determinar cuánto retorno excedente estás obteniendo por
 
 Ejemplo:
 Portafolio A: $\mu$ = 12%, $\sigma$ = 20%, $r_{f}$ = 5%
-SR_A = (12% - 5%) / 20% = 0.35
+$SR_A$ = (12% - 5%) / 20% = 0.35
 
 Portafolio B: $\mu$ = 10%, $\sigma$ = 15%, $r_{f}$ = 5%
-SR_B = (10% - 5%) / 15% = 0.33
+$SR_B$ = (10% - 5%) / 15% = 0.33
 
 Portafolio A es mejor (mayor Sharpe)."
 
@@ -373,7 +373,7 @@ $$E[R_c] = r_f + y(\mu_p - r_f)$$
 Donde $y$ es la proporción invertida en el portafolio con riesgo.
 
 **Explicación simple del teorema:** 
-Imagina que vas a un restaurante muy famoso que solo sirve un platillo combinado perfecto (el Portafolio de Tangencia). El chef ha decidido que esa mezcla de ingredientes es la que mejor sabor da por cada caloría (mejor retorno por unidad de riesgo).El Teorema de la Separación dice que:
+Imagina que vas a un restaurante muy famoso que solo sirve un platillo combinado perfecto (el Portafolio de Tangencia). El chef ha decidido que esa mezcla de ingredientes es la que mejor sabor da por cada caloría (mejor retorno por unidad de riesgo). El Teorema de la Separación dice que:
 - Paso 1 (El Chef): El chef diseña la mejor mezcla de activos con riesgo del mercado. Esta mezcla es la misma para todos, sin importar si eres un inversor conservador o arriesgado. Es el punto donde la línea que sale desde la tasa libre de riesgo ($r_f$) toca "rozando" (tangente) a la frontera eficiente.
 - Paso 2 (Tú): Tú decides cuánta hambre tienes. Si eres miedoso, pides un poco de ese plato y mucha agua (activo libre de riesgo). Si eres audaz, pides tres platos y hasta pides dinero prestado para comprar más.
 
@@ -415,10 +415,10 @@ CEMEX solo 15% a pesar de su volatilidad, porque la correlación con otros ayuda
 
 **En el punto tangente:**
 - 100% en portafolio tangente
-- 0% en r_f
+- 0% en $r_f$
 
 **A la derecha del tangente:**
-- $>100%$ en tangente (pedir prestado al $r_{f}$ para invertir más)
+- $>100$% en tangente (pedir prestado al $r_{f}$ para invertir más)
 - Apalancamiento
 - Mayor riesgo que tangente
 - Inversionista agresivo"
@@ -450,7 +450,7 @@ Ejecute Parte 9 del script.
 
 **Explicación:**
 
-"Agregamos restricción: w ≥ 0 (no negativos)
+"Agregamos restricción: $w \geq 0$ (no negativos)
 
 Esto se llama OPTIMIZACIÓN CON RESTRICCIONES.
 
@@ -485,9 +485,9 @@ PERO hacen el portafolio más práctico e implementable.
 Tradeoff: teoría vs práctica."
 
 **Otras restricciones comunes:**
-- Límites de concentración: $w_{i}$ ≤ 20%
+- Límites de concentración: $w_{i} \leq$ 20%
 - Restricciones sectoriales: suma de pesos por sector
-- Mínimo de posiciones: $w_{i}$ = 0 o $w_{i}$ ≥ 5% (no micro-posiciones)
+- Mínimo de posiciones: $w_{i} = 0$ o $w_{i} \geq 5$% (no micro-posiciones)
 - Turnover limits: cuánto puedes cambiar de un periodo a otro
 
 ---
@@ -534,7 +534,7 @@ Sharpe: 0.62
 
 "El desempeño real es PEOR que el esperado. ¿Por qué?
 
-1. **Error de estimación:** μ y Σ estimados tienen error
+1. **Error de estimación:**  $\mu$ y $\Sigma$ estimados tienen error
 2. **Cambios estructurales:** Correlaciones cambian en crisis
 3. **Eventos imprevistos:** COVID, guerra, etc.
 4. **Sesgo de optimización:** Maximizar Sharpe tiende a sobreestimar"
