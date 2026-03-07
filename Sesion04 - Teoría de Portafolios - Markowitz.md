@@ -408,7 +408,7 @@ CEMEX solo 15% a pesar de su volatilidad, porque la correlación con otros ayuda
 "Puntos en la CML:
 
 **A la izquierda del tangente:**
-- Más del 50% en r_f
+- Más del 50% en $r_{f}$
 - Menos del 50% en tangente
 - Menor riesgo que tangente
 - Inversionista conservador
@@ -418,7 +418,7 @@ CEMEX solo 15% a pesar de su volatilidad, porque la correlación con otros ayuda
 - 0% en r_f
 
 **A la derecha del tangente:**
-- >100% en tangente (pedir prestado al r_f para invertir más)
+- $>100%$ en tangente (pedir prestado al $r_{f}$ para invertir más)
 - Apalancamiento
 - Mayor riesgo que tangente
 - Inversionista agresivo"
@@ -485,9 +485,9 @@ PERO hacen el portafolio más práctico e implementable.
 Tradeoff: teoría vs práctica."
 
 **Otras restricciones comunes:**
-- Límites de concentración: w_i ≤ 20%
+- Límites de concentración: $w_{i}$ ≤ 20%
 - Restricciones sectoriales: suma de pesos por sector
-- Mínimo de posiciones: w_i = 0 o w_i ≥ 5% (no micro-posiciones)
+- Mínimo de posiciones: $w_{i}$ = 0 o $w_{i}$ ≥ 5% (no micro-posiciones)
 - Turnover limits: cuánto puedes cambiar de un periodo a otro
 
 ---
@@ -503,7 +503,7 @@ Ejecute Parte 10 del script.
 "¡CUIDADO con backtesting!
 
 Estamos usando los MISMOS datos para:
-1. Estimar parámetros ($\MU$, $\Sigma$)
+1. Estimar parámetros ($\mu$, $\Sigma$)
 2. Evaluar desempeño
 
 Esto se llama IN-SAMPLE testing.
