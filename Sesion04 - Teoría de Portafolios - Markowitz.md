@@ -92,7 +92,7 @@ $$\sigma_{p}^{2} = w_{1}^{2}\sigma_{1}^{2}+w_{2}^{2}\sigma_{2}^{2}+2w_{1}w_{2}\s
 
 "El último término (correlación) es la CLAVE de la diversificación."
 
-Calcular con $\rho# = 0.3:
+Calcular con $\rho$ = 0.3:
 
 $\sigma_{\rho}$ = √[0.25(400) + 0.25(225) + 2(0.5)(0.5)(20)(15)(0.3)]
 
@@ -152,16 +152,16 @@ Ejecutar Parte 4 del script.
 
 "Observar cómo cambia la frontera:
 
-**ρ = -0.9 (verde oscuro):**
+**$\rho$ = -0.9 (verde oscuro):**
 - Curva muy pronunciada hacia la izquierda
 - Riesgo se puede reducir DRAMÁTICAMENTE
 - En el extremo, ρ = -1 permitiría eliminar TODO el riesgo
 
-**ρ = 0 (azul):**
+**$\rho$ = 0 (azul):**
 - Beneficio moderado de diversificación
 - Típico de activos de sectores diferentes
 
-**ρ = 0.9 (rojo):**
+**$\rho$ = 0.9 (rojo):**
 - Curva casi recta
 - Poco beneficio de diversificación
 - Típico de activos del mismo sector"
