@@ -57,7 +57,7 @@ Pregunta:
 (Respuestas: asimetría negativa, colas pesadas, eventos extremos)
 
 **Conexión con Markowitz:**
-"Markowitz asume normalidad (solo usa μ y σ²). Ahora sabemos que es una simplificación. AÚN ASÍ, su teoría es útil como punto de partida y se usa ampliamente en la industria."
+"Markowitz asume normalidad (solo usa $\mu$ y $\sigma^{2}$). Ahora sabemos que es una simplificación. AÚN ASÍ, su teoría es útil como punto de partida y se usa ampliamente en la industria."
 
 **1.2 La pregunta fundamental**
 
