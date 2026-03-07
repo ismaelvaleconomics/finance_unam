@@ -78,7 +78,7 @@ Pero hay algo más importante: ¿Por qué elegir SOLO uno?
 
 **1.3 Demostración numérica rápida**
 
-En la pizarra, calcular:
+Calcular:
 
 Portafolio 50-50:
 - Retorno: 0.5(12%) + 0.5(8%) = 10%
@@ -92,7 +92,8 @@ $$\sigma_{p}^{2} = w_{1}^{2}\sigma_{1}^{2}+w_{2}^{2}\sigma_{2}^{2}+2w_{1}w_{2}\s
 
 "El último término (correlación) es la CLAVE de la diversificación."
 
-Calcular con ρ = 0.3:
+Calcular con $\rho# = 0.3:
+
 $\sigma_{\rho}$ = √[0.25(400) + 0.25(225) + 2(0.5)(0.5)(20)(15)(0.3)]
 
 $\sigma_{\rho}$ = √[100 + 56.25 + 45] = √201.25 = 14.2%
