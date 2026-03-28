@@ -942,7 +942,7 @@ Alternatively, we can express this by grouping the present value of each cash fl
 
 $$C = \frac{1}{(1+y)^2} \sum_{t=1}^{T} t(t+1) \cdot w_t$$
 
-_(where $w_t = \frac{CF_t / (1+y)^t}{P}$)_
+where $w_t = \frac{CF_t / (1+y)^t}{P}$
 
 ### The Takeaway
 
