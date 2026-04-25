@@ -361,7 +361,7 @@ $$\Sigma = L L^T$$
 
 - ¿Para qué sirve en la Simulación de Monte Carlo?
 
-Aquí es donde ocurre la magia. Cuando hacemos Monte Carlo, la computadora genera números aleatorios **independientes** (basados en una normal estándar $Z \sim N(0,1)$).
+Aquí es donde ocurre la magia. Cuando hacemos Monte Carlo, la computadora genera números aleatorios **independientes** (basados en una normal estándar $Z \sim N(0,1)$ ).
 
 El problema es que, en la vida real, los activos **no son independientes**. Si simulas 1,000 escenarios donde Apple y Microsoft se mueven de forma totalmente aleatoria e inconexa, tus resultados de VaR serán falsos porque estarás sobreestimando la diversificación.
 
