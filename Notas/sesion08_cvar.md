@@ -96,7 +96,7 @@ Antes de introducir el CVaR formalmente, conviene entender por qué necesitamos 
    ρ(λX) = λ·ρ(X)  para λ > 0
 
 3. INVARIANZA A TRASLACIONES
-   Agregar efectivo libre de riesgo reduce el riesgo en esa cantidad.
+   Agregar activo libre de riesgo reduce el riesgo en esa cantidad.
    ρ(X + c) = ρ(X) − c
 
 4. SUBADITIVIDAD  ← la más importante
@@ -108,8 +108,6 @@ Antes de introducir el CVaR formalmente, conviene entender por qué necesitamos 
 La subaditividad formaliza matemáticamente el principio de diversificación: combinar portafolios no debe ser más riesgoso que la suma de sus partes. El VaR **viola esta propiedad** cuando las distribuciones tienen colas pesadas o no son normales.
 
 La subaditividad es la base matemática de la **diversificación**. Cuando una medida de riesgo es subaditiva, garantiza que "el todo no es mayor que la suma de sus partes".
-
-Como buscas explicar este concepto de forma más clara, ayuda desglosarlo en por qué es importante, por qué el Value at Risk (VaR) falla y un ejemplo práctico.
 
 #### a) La intuición central: Diversificación
 
@@ -148,13 +146,13 @@ Si calculamos el **VaR al 95%**:
 
 Ahora las fusionamos. Al ser independientes, hay cuatro posibilidades:
 
-1.  Ambas pierden: (4% × 4%) = **0.16%** de probabilidad de perder $200.
+1.  Ambas pierden: (0.04% × 0.04%) = **0.16%** de probabilidad de perder $200.
     
-2.  Solo A pierde: (4% × 96%) = **3.84%** de probabilidad de perder $100.
+3.  Solo A pierde: (4% × 96%) = **3.84%** de probabilidad de perder $100.
     
-3.  Solo B pierde: (96% × 4%) = **3.84%** de probabilidad de perder $100.
+4.  Solo B pierde: (96% × 4%) = **3.84%** de probabilidad de perder $100.
     
-4.  Ninguna pierde: (96% × 96%) = **92.16%** de probabilidad de perder $0.
+5.  Ninguna pierde: (96% × 96%) = **92.16%** de probabilidad de perder $0.
     
 
 Para encontrar el **VaR al 95%** de la cartera combinada, sumamos las probabilidades de las pérdidas empezando por el peor caso:
@@ -204,7 +202,7 @@ Donde:
 * $r$: Rendimiento del portafolio.
 * $VaR(\alpha)$: Umbral de pérdida calculado para el nivel $\alpha$.
 
-En palabras: es el promedio de todos los rendimientos que caen por debajo del VaR. O, en otras palabras, simplemente te dice que el **CVaR** es el promedio de todos los rendimientos ($r$) que son iguales o peores que el VaR.
+En palabras simples: es el promedio de todos los rendimientos que caen por debajo del VaR. O, en otras palabras, simplemente te dice que el **CVaR** es el promedio de todos los rendimientos ($r$) que son iguales o peores que el VaR.
 
 **Relación con el VaR:**
 
@@ -276,7 +274,7 @@ Ejecutar la Parte correspondiente del script y observar el cociente CVaR/VaR a l
 
 **3.1 Derivación bajo distribución normal**
 
-Cuando los rendimientos siguen una distribución normal, el CVaR tiene una fórmula analítica cerrada. La derivación es un ejercicio de integración de la función de densidad normal en la cola izquierda.
+Cuando los rendimientos siguen una distribución normal, el CVaR tiene una fórmula/solución analítica cerrada. La derivación es un ejercicio de integración de la función de densidad normal en la cola izquierda (función generadora de momentos) (Wooldrige).
 
 Bajo $r \sim N(\mu, \sigma^2)$:
 
