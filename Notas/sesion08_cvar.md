@@ -1,30 +1,31 @@
 # GUÍA - SESIÓN 8
+
 ## CVaR y Medidas Coherentes de Riesgo
 
 **Curso:** Mercado de Capitales  
-**Profesor:** Ismael Valverde  
+**Profesor:** Ismael Valverde
 
----
+----------
 
 ## OBJETIVOS DE APRENDIZAJE
 
 Al finalizar esta sesión, serás capaz de:
 
-1. Explicar por qué el VaR es una medida incompleta del riesgo de cola
-2. Calcular el CVaR histórico, paramétrico y por simulación Monte Carlo
-3. Interpretar el CVaR como la pérdida esperada dado que ya se superó el VaR
-4. Entender las cuatro propiedades de una medida coherente de riesgo
-5. Demostrar por qué el VaR viola subaditividad en distribuciones no normales
-6. Comparar VaR y CVaR en contextos de crisis usando datos reales de la BMV
-7. Conocer la transición regulatoria de Basilea II (VaR) a Basilea III (Expected Shortfall)
+1.  Explicar por qué el VaR es una medida incompleta del riesgo de cola
+2.  Calcular el CVaR histórico, paramétrico y por simulación Monte Carlo
+3.  Interpretar el CVaR como la pérdida esperada dado que ya se superó el VaR
+4.  Entender las cuatro propiedades de una medida coherente de riesgo
+5.  Demostrar por qué el VaR viola subaditividad en distribuciones no normales
+6.  Comparar VaR y CVaR en contextos de crisis usando datos reales de la BMV
+7.  Conocer la transición regulatoria de Basilea II (VaR) a Basilea III (Expected Shortfall)
 
----
+----------
 
 ## CONTEXTO Y MOTIVACIÓN
 
 ### El problema con el VaR
 
-En la Sesión 7 aprendimos a calcular el VaR. Antes de abrir R, considera este ejemplo:
+En la Sesión 7 aprendimos a calcular el VaR. Considera este ejemplo:
 
 ```
 Dos portafolios, mismo VaR(99%) = −3%
@@ -36,6 +37,7 @@ Portafolio A:
 Portafolio B:
   el 1% de días peores va de −3% a −25%
   → pérdida promedio en cola: −9.1%
+
 ```
 
 El VaR reporta el mismo número para ambos. Un gestor que solo mira el VaR trata estos dos portafolios como equivalentes. Claramente no lo son.
@@ -49,30 +51,32 @@ El CVaR (Conditional Value at Risk), también llamado **Expected Shortfall (ES)*
 ```
 VaR:  ¿cuál es el umbral de pérdida que se supera en el α% de los días?
 CVaR: dado que ya estamos en ese peor α%, ¿cuánto perdemos en promedio?
+
 ```
 
 ### Por qué importa en México
 
-- Basilea III (implementado en México vía CNBV desde 2019) exige el Expected Shortfall como medida regulatoria de riesgo de mercado, sustituyendo al VaR de Basilea II
-- Las SOFOMES y fondos de deuda con alta exposición a crédito corporativo usan CVaR porque los defaults son eventos de cola severa, no suave
-- Durante el crash de marzo 2020 el CVaR del IPC fue aproximadamente 2.3 veces mayor que su VaR — la diferencia que el VaR "no veía"
+-   Basilea III (implementado en México vía CNBV desde 2019) exige el Expected Shortfall como medida regulatoria de riesgo de mercado, sustituyendo al VaR de Basilea II
+-   Las SOFOMES y fondos de deuda con alta exposición a crédito corporativo usan CVaR porque los defaults son eventos de cola severa, no suave
+-   Durante el crash de marzo 2020 el CVaR del IPC fue aproximadamente 2.3 veces mayor que su VaR — la diferencia que el VaR "no veía"
 
----
+----------
 
 ## CONEXIÓN CON SESIONES ANTERIORES
 
 **Sesión 3 (Estadística descriptiva):**
-- La curtosis elevada de los rendimientos mexicanos (> 3) justificó desde entonces usar medidas más robustas que la normal
-- El CVaR captura exactamente lo que la curtosis describe: la masa extra en las colas
+
+-   La curtosis elevada de los rendimientos mexicanos (> 3) justificó desde entonces usar medidas más robustas que la normal
+-   El CVaR captura exactamente lo que la curtosis describe: la masa extra en las colas
 
 **Sesión 7 (VaR):**
-- El CVaR se construye directamente sobre el VaR: necesitas el umbral VaR para definir la cola que promedias
-- Los tres métodos de cálculo (histórico, paramétrico, Monte Carlo) se replican aquí con una extensión
 
-**Mensaje clave:**
-"El VaR nos dice dónde empieza el problema. El CVaR nos dice qué tan grave es."
+-   El CVaR se construye directamente sobre el VaR: necesitas el umbral VaR para definir la cola que promedias
+-   Los tres métodos de cálculo (histórico, paramétrico, Monte Carlo) se replican aquí con una extensión
 
----
+**Mensaje clave:** "El VaR nos dice dónde empieza el problema. El CVaR nos dice qué tan grave es."
+
+----------
 
 ## ESTRUCTURA DE LA SESIÓN
 
@@ -98,11 +102,80 @@ Antes de introducir el CVaR formalmente, conviene entender por qué necesitamos 
 4. SUBADITIVIDAD  ← la más importante
    Fusionar portafolios no puede aumentar el riesgo total.
    ρ(X + Y) ≤ ρ(X) + ρ(Y)
+
 ```
 
 La subaditividad formaliza matemáticamente el principio de diversificación: combinar portafolios no debe ser más riesgoso que la suma de sus partes. El VaR **viola esta propiedad** cuando las distribuciones tienen colas pesadas o no son normales.
 
-**Ejemplo de violación:**
+La subaditividad es la base matemática de la **diversificación**. Cuando una medida de riesgo es subaditiva, garantiza que "el todo no es mayor que la suma de sus partes".
+
+Como buscas explicar este concepto de forma más clara, ayuda desglosarlo en por qué es importante, por qué el Value at Risk (VaR) falla y un ejemplo práctico.
+
+#### a) La intuición central: Diversificación
+
+En finanzas, el objetivo de la diversificación es asegurar que, al repartir tus inversiones, reduces el impacto de un único evento adverso.
+
+-   Si una medida de riesgo es **subaditiva**, te recompensa por diversificar.
+    
+-   Si una medida de riesgo **viola** la subaditividad (como el VaR), podría sugerir matemáticamente que dividir una gran empresa en dos más pequeñas "reduce" el riesgo total, lo cual es una falacia lógica peligrosa.
+    
+#### b) ¿Por qué el VaR falla la prueba?
+
+El Value at Risk (VaR) solo mira un umbral específico (por ejemplo, el percentil 95). No te dice nada sobre lo que sucede en la "cola", es decir, las pérdidas extremas más allá de ese punto.
+
+El VaR falla la subaditividad principalmente en dos escenarios:
+
+1.  **Distribuciones sesgadas:** Cuando tienes activos con una baja probabilidad de pérdidas muy altas (como bonos de catástrofe u opciones digitales).
+    
+2.  **Riesgo de concentración:** Cuando la "cola" de la cartera combinada es más pesada o "gorda" que las colas individuales.
+    
+#### c) Un contraejemplo práctico
+
+Imagina dos "Opciones Digitales" independientes (A y B). Cada una tiene un **4%** de probabilidad de perder **$100** y un **96%** de probabilidad de perder **$0**.
+
+##### Escenario 1: Carteras individuales
+
+Si calculamos el **VaR al 95%**:
+
+-   El peor escenario al 95% para la Cartera A es $0 (porque la pérdida del 4% aún no se ha activado).
+    
+-   El peor escenario al 95% para la Cartera B es $0.
+    
+-   **$\rho(A) + \rho(B) = 0 + 0 = 0$**
+    
+
+##### Escenario 2: Cartera combinada (A + B)
+
+Ahora las fusionamos. Al ser independientes, hay cuatro posibilidades:
+
+1.  Ambas pierden: (4% × 4%) = **0.16%** de probabilidad de perder $200.
+    
+2.  Solo A pierde: (4% × 96%) = **3.84%** de probabilidad de perder $100.
+    
+3.  Solo B pierde: (96% × 4%) = **3.84%** de probabilidad de perder $100.
+    
+4.  Ninguna pierde: (96% × 96%) = **92.16%** de probabilidad de perder $0.
+    
+
+Para encontrar el **VaR al 95%** de la cartera combinada, sumamos las probabilidades de las pérdidas empezando por el peor caso:
+
+-   Probabilidad de perder $100 o más = $0.16\% + 3.84\% + 3.84\% = 7.84\%$.
+    
+-   Dado que $7.84\% > 5\%$, la pérdida del percentil 95 es ahora de **$100**.
+    
+
+#### La contradicción de la propiedad
+
+-   $\rho (A + B) = 100$
+    
+-   $\rho (A) + \rho (B) = 0$
+    
+-   **$100 \not\le 0$**
+    
+
+El VaR dice que la cartera fusionada es más riesgosa que la suma de sus partes. Esto es una violación de la subaditividad e implica que la diversificación te "perjudicó", razón por la cual suele preferirse el Expected Shortfall (CVaR), ya que promedia todas las pérdidas más allá del umbral, asegurando que la subaditividad siempre se cumpla.
+
+**Ejemplo de contradicción:**
 
 ```
 Dos bonos, cada uno con probabilidad 4% de default:
@@ -115,24 +188,23 @@ Dos bonos, cada uno con probabilidad 4% de default:
   VaR(95%) del portafolio: > $0
 
   ρ(A+B) > ρ(A) + ρ(B)  → violación de subaditividad
+
 ```
 
 Un regulador que use VaR puede incentivar que los bancos tengan los bonos por separado en lugar de diversificarlos, lo que es absurdo. El CVaR no tiene este problema: siempre satisface las cuatro propiedades.
 
 **1.2 Definición formal del CVaR**
 
-El CVaR al nivel de confianza $(1- \alpha)$ es la pérdida esperada condicional a estar en el peor α% de los escenarios:
+El CVaR al nivel de confianza $(1- \alpha)$ es la pérdida esperada condicional a estar en el peor $\alpha$% de los escenarios:
 
-```
-CVaR(α) = E[r | r ≤ VaR(α)]
+$$CVaR(\alpha) = E[r \mid r \leq VaR(\alpha)]$$
 
 Donde:
-  α   = nivel de significancia (ej. 0.05 para CVaR al 95%)
-  r   = rendimiento del portafolio
-  VaR = umbral ya calculado en Sesión 7
-```
+* $\alpha$: Nivel de significancia (ej. $0.05$ para $CVaR$ al $95\%$).
+* $r$: Rendimiento del portafolio.
+* $VaR(\alpha)$: Umbral de pérdida calculado para el nivel $\alpha$.
 
-En palabras: es el promedio de todos los rendimientos que caen por debajo del VaR.
+En palabras: es el promedio de todos los rendimientos que caen por debajo del VaR. O, en otras palabras, simplemente te dice que el **CVaR** es el promedio de todos los rendimientos ($r$) que son iguales o peores que el VaR.
 
 **Relación con el VaR:**
 
@@ -143,9 +215,10 @@ CVaR es SIEMPRE más negativo que el VaR del mismo nivel:
 La diferencia (CVaR − VaR) mide la severidad de la cola:
   pequeña diferencia → cola suave (distribución aproximadamente normal)
   gran diferencia    → cola pesada (riesgo de eventos extremos)
+
 ```
 
----
+----------
 
 ### BLOQUE 2: CVaR Histórico
 
@@ -158,6 +231,7 @@ Procedimiento:
   1. Calcular VaR histórico al nivel α  →  umbral = quantile(r, probs = α)
   2. Filtrar todos los rendimientos ≤ umbral  →  cola = r[r ≤ umbral]
   3. CVaR = mean(cola)
+
 ```
 
 **Ejemplo numérico con 20 rendimientos:**
@@ -179,15 +253,16 @@ Interpretación:
   VaR:  en el 5% peor de los días, la pérdida MÍNIMA es 2.4%
   CVaR: en el 5% peor de los días, la pérdida PROMEDIO es 4.41%
   El CVaR es 1.84 veces mayor → cola de riesgo importante
+
 ```
 
 **Preguntas de comprensión:**
 
 **Pregunta 1:** "¿Qué pasaría con el CVaR si eliminamos el día de mayor pérdida (−8.1%)?"  
-→ Subiría (sería menos negativo) porque el promedio de la cola cambia al quitar el valor extremo. El VaR no cambiaría porque el umbral sigue siendo el décimo percentil.
+$\rightarrow$ Subiría (sería menos negativo) porque el promedio de la cola cambia al quitar el valor extremo. El VaR no cambiaría porque el umbral sigue siendo el décimo percentil.
 
 **Pregunta 2:** "¿Por qué el CVaR es más informativo que el VaR en distribuciones de cola pesada?"  
-→ Porque en colas pesadas hay observaciones muy alejadas del umbral. El promedio captura esa severidad; el umbral solo marca dónde empieza la zona de peligro.
+$\rightarrow$ Porque en colas pesadas hay observaciones muy alejadas del umbral. El promedio captura esa severidad; el umbral solo marca dónde empieza la zona de peligro.
 
 **2.2 CVaR rodante**
 
@@ -195,7 +270,7 @@ De la misma forma que calculamos el VaR rodante en la Sesión 7, podemos calcula
 
 Ejecutar la Parte correspondiente del script y observar el cociente CVaR/VaR a lo largo del tiempo. Cuando ese cociente se aleja mucho de 1.0, el mercado está en un régimen de cola pesada — exactamente la situación en que el VaR como única medida es más peligroso.
 
----
+----------
 
 ### BLOQUE 3: CVaR Paramétrico
 
@@ -203,61 +278,67 @@ Ejecutar la Parte correspondiente del script y observar el cociente CVaR/VaR a l
 
 Cuando los rendimientos siguen una distribución normal, el CVaR tiene una fórmula analítica cerrada. La derivación es un ejercicio de integración de la función de densidad normal en la cola izquierda.
 
-```
-Bajo r ~ N(μ, σ²):
+Bajo $r \sim N(\mu, \sigma^2)$:
 
-CVaR(α) = μ − σ × φ(z_α) / α
+$$CVaR(\alpha) = \mu - \sigma \times \frac{\phi(z_\alpha)}{\alpha}$$
 
 Donde:
-  z_α  = qnorm(α)          cuantil normal estándar
-  φ(·) = dnorm(·)          densidad de la normal estándar en z_α
-  α    = nivel de significancia (0.05 para CVaR al 95%)
-```
+* $z_\alpha = \Phi^{-1}(\alpha)$ (cuantil de la normal estándar).
+* $\phi(\cdot)$ es la función de densidad de la normal estándar en $z_\alpha$.
+* $\alpha$ es el nivel de significancia (ej. $0.05$ para el $CVaR$ al $95\%$).
 
-**Ejemplo numérico:**
+#### Ejemplo Numérico: Portafolio de Mínima Varianza (MV)
 
-```
-Datos del portafolio MV:
-  μ = 0.0004
-  σ = 0.0150
-  α = 0.05  →  z_α = qnorm(0.05) = −1.6449
-              φ(z_α) = dnorm(−1.6449) = 0.1031
+**Datos de entrada:**
+* $\mu = 0.0004$
+* $\sigma = 0.0150$
+* $\alpha = 0.05 \implies z_\alpha = -1.6449$
+* $\phi(z_\alpha) = 0.1031$
 
-CVaR(95%) = 0.0004 − 0.0150 × 0.1031 / 0.05
-          = 0.0004 − 0.03093
-          = −0.03053
-          = −3.05%
+**Cálculo del CVaR:**
+$$
+\begin{aligned}
+CVaR(95\%) &= 0.0004 - 0.0150 \times \frac{0.1031}{0.05} \\
+&= 0.0004 - 0.03093 \\
+&= -0.03053 \approx -3.05\%
+\end{aligned}
+$$
 
-Comparar con VaR paramétrico(95%) = −2.43%
-  CVaR / VaR = 3.05 / 2.43 = 1.26×
+**Comparación con VaR Paramétrico (95%):**
+* $VaR(95\%) = -2.43\%$
+* Relación: $\frac{CVaR}{VaR} = \frac{3.05}{2.43} = 1.26\times$
 
-Bajo normalidad, el CVaR es aproximadamente 1.25× el VaR al 95%.
-Este cociente es fijo para la distribución normal — si es mucho mayor
-en los datos reales, la distribución tiene colas más pesadas que la normal.
-```
+> **Nota Clave:** Bajo normalidad, el $CVaR$ es aproximadamente $1.25\times$ el $VaR$ al $95\%$. Si en tus datos reales este cociente es significativamente mayor, es una señal clara de que tu portafolio tiene **colas pesadas** (fat tails).
 
 **La lógica detrás de la fórmula:**
 
-La fracción `φ(z_α) / α` es la razón inversa de Mills. Representa qué tan lejos en promedio están las observaciones de la cola respecto al umbral. Cuanto más pesada es la cola (mayor curtosis), mayor es este factor y mayor la diferencia entre CVaR y VaR.
+La fracción $\frac{\phi(z_\alpha)}{\alpha}$ se conoce como la **razón inversa de Mills**. 
+
+Esta razón representa qué tan lejos, en promedio, se encuentran las observaciones de la cola respecto al umbral de pérdida. 
+
+* **Mayor Curtosis (Colas Pesadas):** Aumenta este factor.
+* **Impacto:** Incrementa la brecha entre el $CVaR$ y el $VaR$.
+
+Mientras que el $VaR$ solo nos dice dónde empieza el "incendio", la razón inversa de Mills ayuda al $CVaR$ a decirnos qué tan alta es la temperatura promedio dentro de la zona incendiada.
 
 **3.2 CVaR bajo distribución t-Student**
 
 Cuando usamos la distribución t para capturar colas pesadas, la fórmula del CVaR cambia:
 
-```
-Bajo r ~ t(df) escalada:
+Bajo $r \sim t(df)$ escalada (distribución $t$ de Student):
 
-CVaR(α) = μ − σ × [f_t(t_α, df) × (df + t_α²) / ((df-1) × α)]
+$$CVaR(\alpha) = \mu - \sigma \times \left[ \frac{f_t(t_\alpha, df) \times (df + t_\alpha^2)}{(df - 1) \times \alpha} \right]$$
 
 Donde:
-  t_α    = qt(α, df)        cuantil de la t-Student con df grados
-  f_t(·) = dt(·, df)        densidad de la t-Student en t_α
-  df     = grados de libertad (estimados en Sesión 7)
-```
+* $t_\alpha = Q_t(\alpha, df)$: Cuantil de la $t$-Student con $df$ grados de libertad.
+* $f_t(\cdot)$: Función de densidad de la $t$-Student evaluada en $t_\alpha$.
+* $df$: Grados de libertad (parámetro que determina el grosor de las colas).
+
+**¿Por qué es importante esta versión?** A diferencia de la normal, la distribución $t$ captura mucho mejor el riesgo de eventos extremos ("cisnes negros"). Cuando $df$ es pequeño (por ejemplo, $df=3$ o $4$), el término entre corchetes crece significativamente, reflejando un $CVaR$ mucho más conservador que el de una distribución normal.
 
 No es necesario memorizar esta fórmula. La implementación en R es directa y el script la calcula automáticamente. Lo importante es la intuición: con df bajos (colas más pesadas), el CVaR se aleja más del VaR que bajo normalidad, reflejando la mayor severidad de los eventos extremos.
 
----
+----------
 
 ### BLOQUE 4: CVaR por Simulación Monte Carlo
 
@@ -274,6 +355,7 @@ Procedimiento:
   En R:
     umbral <- quantile(r_simulado, probs = alpha)
     cvar   <- mean(r_simulado[r_simulado <= umbral])
+
 ```
 
 Con simulaciones suficientemente grandes (≥ 50,000 escenarios), el CVaR simulado converge al teórico con buena precisión. La ventaja sobre el método paramétrico es que no impone ningún supuesto distribucional.
@@ -288,11 +370,42 @@ Simulaciones  VaR(95%) estable    CVaR(95%) estable
    10,000      Sí                  Aproximado
   100,000      Sí                  Sí (~2 decimales)
 1,000,000      Sí                  Sí (~3 decimales)
+
 ```
 
 En la práctica institucional, los sistemas de riesgo usan entre 100,000 y 1,000,000 simulaciones para reportar el CVaR con confianza suficiente.
 
----
+### 4.3 La "Trampa de la Cola": Por qué el CVaR es más exigente
+
+Para entender por qué necesitamos tantas simulaciones, piensa en la **disponibilidad de datos** en la zona crítica.
+
+Si corres una simulación de **1,000 escenarios** para un nivel de confianza del 95% ($\alpha = 0.05$):
+
+-   El **VaR** es simplemente el dato en la posición 50. Es un solo punto de corte.
+    
+-   El **CVaR** debe promediar los escenarios del 1 al 50.
+    
+
+**El problema de la representatividad:**
+
+Promediar solo 50 datos (en el caso de $N=1,000$) para estimar una pérdida catastrófica es estadísticamente "pobre". Cualquier valor extremo (un _outlier_ simulado) moverá el promedio drásticamente. Por eso decimos que el CVaR tiene **mayor error de estimación** que el VaR para el mismo número de simulaciones.
+
+#### Recomendación de implementación en R:
+
+Cuando trabajes con Monte Carlo para CVaR, es una buena práctica verificar la estabilidad visualmente:
+
+```
+# Tip didáctico: Gráfico de convergencia
+n_sims <- seq(1000, 100000, by=1000)
+cvar_vector <- sapply(n_sims, function(n) {
+  sims <- rnorm(n, mu, sigma)
+  mean(sims[sims <= quantile(sims, 0.05)])
+})
+plot(n_sims, cvar_vector, type="l", main="Convergencia del CVaR")
+
+```
+> **En resumen:** Mientras que el VaR es un "portero" que vigila la entrada, el CVaR es un "investigador" que necesita analizar a todos los que entraron. Si solo entran 50 personas, la investigación es poco fiable; si entran 5,000 (de 100,000 simulaciones), la conclusión es sólida.
+----------
 
 ### BLOQUE 5: Comparación completa y análisis de crisis
 
@@ -301,14 +414,15 @@ En la práctica institucional, los sistemas de riesgo usan entre 100,000 y 1,000
 Al ejecutar el script obtendrás una tabla similar a esta (los valores exactos dependen del período y los datos descargados):
 
 | Método | VaR 95% | CVaR 95% | Ratio CVaR/VaR | VaR 99% | CVaR 99% |
-|---|---|---|---|---|---|
-| Histórico | −2.40% | −3.85% | 1.60× | −3.90% | −5.70% |
-| Paramétrico (Normal) | −2.43% | −3.05% | 1.26× | −3.44% | −3.95% |
-| Monte Carlo t-Student | −2.61% | −3.90% | 1.49× | −4.10% | −5.80% |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Histórico** | $-2.40\%$ | $-3.85\%$ | $1.60\times$ | $-3.90\%$ | $-5.70\%$ |
+| **Paramétrico (Normal)** | $-2.43\%$ | $-3.05\%$ | $1.26\times$ | $-3.44\%$ | $-3.95\%$ |
+| **Monte Carlo $t$-Student** | $-2.61\%$ | $-3.90\%$ | $1.49\times$ | $-4.10\%$ | $-5.80\%$ |
 
-**Cómo leer esta tabla:**
+#### **Cómo leer esta tabla:**
 
-El ratio CVaR/VaR es el indicador más importante. Bajo normalidad perfecta ese ratio es siempre ~1.26 para el nivel 95%. Cuando los datos reales muestran un ratio de 1.5× o mayor, la distribución tiene colas pesadas significativas y el VaR paramétrico está subestimando el riesgo real.
+* **El ratio CVaR/VaR es el indicador más importante.** Bajo **normalidad perfecta**, este ratio es siempre $\approx 1.26$ para el nivel del $95\%$. 
+* Cuando los datos reales muestran un ratio de $1.5\times$ o mayor, significa que la distribución tiene **colas pesadas** significativas y el VaR paramétrico está subestimando el riesgo real.
 
 **5.2 Análisis durante la crisis de 2020**
 
@@ -318,6 +432,7 @@ Comparar el cociente CVaR/VaR en dos períodos revela algo importante sobre la n
 Período        VaR(95%)  CVaR(95%)  Ratio
 2019 normal    −1.6%     −2.3%      1.44×
 2020 crisis    −4.8%     −9.2%      1.92×
+
 ```
 
 Durante la crisis no solo el VaR creció (de −1.6% a −4.8%), sino que el ratio también aumentó (de 1.44× a 1.92×). Esto significa que las colas se volvieron relativamente más pesadas: los días malos no solo fueron más frecuentes sino que cuando llegaron, fueron mucho peores de lo que el umbral sugería. Esta es exactamente la situación en la que confiar solo en el VaR es más peligroso.
@@ -328,7 +443,7 @@ Durante la crisis no solo el VaR creció (de −1.6% a −4.8%), sino que el rat
 
 → El Portafolio A. Mismo umbral de pérdida probable, pero cuando las cosas se ponen mal, el Portafolio A pierde 30% más que el VaR mientras que el B pierde 110% más. La diferencia en los escenarios de crisis es enorme aunque en condiciones normales parezcan equivalentes.
 
----
+----------
 
 ### BLOQUE 6: CVaR en la regulación — Basilea III
 
@@ -341,6 +456,7 @@ BASILEA II (hasta 2019)          BASILEA III / FRTB
 Medida: VaR                  →   Expected Shortfall (CVaR)
 Nivel:  99%, 10 días         →   97.5%, horizonte variable
 Modelo: un solo período      →   stressed ES (período de crisis)
+
 ```
 
 El cambio a 97.5% puede parecer menos conservador que 99%, pero el Expected Shortfall al 97.5% captura más riesgo de cola que el VaR al 99%, porque promedia las pérdidas en lugar de solo identificar el umbral.
@@ -349,7 +465,7 @@ El cambio a 97.5% puede parecer menos conservador que 99%, pero el Expected Shor
 
 El capital de reserva exigido por Basilea III a los bancos mexicanos con actividad de mercado es proporcional al ES estresado (calculado sobre un período de 12 meses de alta volatilidad histórica). En México, la CNBV implementó estas disposiciones mediante modificaciones a las Reglas de Capitalización publicadas en el DOF.
 
----
+----------
 
 ## EJEMPLOS Y ANALOGÍAS
 
@@ -363,7 +479,7 @@ Dos aseguradoras pueden tener el mismo deducible (mismo VaR) pero carteras muy d
 
 Durante el crash de Lehman Brothers (septiembre 2008), los modelos VaR de varios bancos grandes reportaban pérdidas de 1 día en el rango de 50–100 millones de dólares. Las pérdidas reales durante las semanas siguientes estuvieron en el rango de miles de millones. La cola no era solo más frecuente — era cualitativamente diferente. El CVaR calculado con datos históricos que incluyeran períodos de estrés previos habría dado señales mucho más cercanas a la realidad.
 
----
+----------
 
 ## EJERCICIOS Y TAREA
 
@@ -371,11 +487,12 @@ Durante el crash de Lehman Brothers (septiembre 2008), los modelos VaR de varios
 **Avanzados:** 5–7
 
 **Énfasis:**
-- Ejercicio 2 (cálculo manual del CVaR histórico) es fundamental — deben hacerlo sin funciones
-- Ejercicio 4 (comparación VaR vs CVaR en crisis) conecta directamente con la limitación del VaR
-- Ejercicio 7 (subaditividad) es el más conceptual y el que más conecta con teoría de medidas coherentes
 
----
+-   Ejercicio 2 (cálculo manual del CVaR histórico) es fundamental — deben hacerlo sin funciones
+-   Ejercicio 4 (comparación VaR vs CVaR en crisis) conecta directamente con la limitación del VaR
+-   Ejercicio 7 (subaditividad) es el más conceptual y el que más conecta con teoría de medidas coherentes
+
+----------
 
 ## SOLUCIONES A EJERCICIOS SELECCIONADOS
 
@@ -401,6 +518,7 @@ cat("N observaciones en cola:", n_cola, "\n")
 cat("VaR(95%):", round(umbral * 100, 4), "%\n")
 cat("CVaR(95%):", round(cvar_95 * 100, 4), "%\n")
 cat("Ratio CVaR/VaR:", round(cvar_95 / umbral, 3), "\n")
+
 ```
 
 ### Ejercicio 4: Comparación VaR vs CVaR durante crisis
@@ -435,6 +553,7 @@ cat("  Ratio:    ", round(res_cris["Ratio"], 3), "\n\n")
 
 cat("El ratio CVaR/VaR aumenta en crisis: las colas se vuelven más pesadas.\n")
 cat("Un modelo basado solo en VaR no captura este empeoramiento.\n")
+
 ```
 
 ### Ejercicio 7: Demostración de violación de subaditividad del VaR
@@ -488,70 +607,83 @@ cat("Suma ponderada:              ", round((0.5*cvar_A + 0.5*cvar_B)*100, 4), "%
 cat("CVaR(95%) portafolio 50/50: ", round(cvar_port*100, 4), "%\n")
 cat("¿CVaR satisface subaditividad?",
     ifelse(cvar_port >= 0.5*cvar_A + 0.5*cvar_B, "SÍ", "NO"), "\n")
+
 ```
 
 **Interpretación esperada:** el VaR del portafolio resulta mayor que la suma ponderada de los VaR individuales (violación de subaditividad), mientras que el CVaR la satisface. Este resultado demuestra de manera empírica el teorema de Artzner et al.
 
----
+----------
 
 ## PROBLEMAS COMUNES Y SOLUCIONES
 
 ### Problema 1: CVaR resulta igual al VaR
+
 **Causa:** La condición de filtrado es `<` en lugar de `<=`, dejando una cola vacía o de un solo elemento  
 **Solución:** Usar `r[r <= umbral]` — el umbral mismo debe incluirse en la cola
 
 ### Problema 2: CVaR positivo o cercano a cero
+
 **Causa:** El período analizado tiene muy pocos días negativos (mercado alcista prolongado)  
 **Explicación:** El CVaR es un estadístico de la cola izquierda; en períodos de baja volatilidad puede acercarse a cero. Ampliar el período de análisis o bajar el nivel de confianza
 
 ### Problema 3: Ratio CVaR/VaR muy alto (> 3×)
+
 **Causa:** El período incluye un evento extremo muy aislado (crash puntual)  
 **Acción:** Verificar si hay datos corruptos o errores de ajuste. Si los datos son correctos, documentar el evento específico que domina la cola
 
 ### Problema 4: `mean(cola)` da NA
+
 **Causa:** El vector filtrado está vacío porque el umbral es muy extremo  
 **Solución:** Verificar que `length(cola) > 0` antes de calcular. Con muestras pequeñas, niveles de confianza muy altos (99.9%) pueden generar colas vacías
 
 ### Problema 5: Diferencia grande entre CVaR histórico y paramétrico
+
 **Causa:** Los rendimientos tienen curtosis elevada (colas pesadas), lo que es esperado  
 **Explicación:** No es un error — es exactamente lo que queremos detectar. El CVaR histórico captura las colas reales; el paramétrico asume normalidad y las suaviza
 
----
+----------
 
 ## PUNTOS PEDAGÓGICOS CRÍTICOS
 
 ### 1. CVaR no reemplaza al VaR: los complementa
+
 El VaR sigue siendo útil como umbral de referencia y es más fácil de comunicar. La práctica profesional usa ambos: el VaR como límite operativo y el CVaR como medida de severidad. Presentarlos como competidores genera confusión; presentarlos como complementarios es más preciso.
 
 ### 2. Subaditividad no es un tecnicismo matemático
+
 Es la formalización de algo que los alumnos ya saben intuitivamente: diversificar no puede ser peor que no diversificar. Cuando el VaR viola subaditividad, el sistema de gestión de riesgos puede penalizar la diversificación — un resultado absurdo que tuvo consecuencias reales en 2008.
 
 ### 3. El ratio CVaR/VaR es más informativo que los valores absolutos
+
 Enfatizar que comparar portafolios por su ratio CVaR/VaR revela la "forma" de su distribución de riesgo. Un ratio cercano a 1.26 sugiere distribución aproximadamente normal; ratios de 1.5× o más sugieren colas pesadas que merecen atención especial.
 
 ### 4. Conectar siempre con la magnitud en pesos
+
 Un CVaR de −4.5% es abstracto. Un CVaR de −$45,000 MXN sobre una inversión de $1,000,000 en los días de crisis es tangible. La conversión a unidades monetarias debe ser automática en cualquier análisis presentado a un cliente o directivo.
 
----
+----------
 
 ## EVALUACIÓN DE LA SESIÓN
 
 ### Pregunta de salida:
+
 "Un portafolio tiene VaR(95%) = −2.8% y CVaR(95%) = −5.6%. ¿Qué nos dice el ratio de 2× sobre la distribución de los rendimientos? ¿En qué situación sería preferible usar el CVaR al VaR para tomar una decisión de inversión?"
 
----
+----------
 
 ## PREPARACIÓN PARA SESIÓN 9
 
 **Tema:** Modelos de volatilidad GARCH
 
 **Conexión:**  
-"VaR y CVaR asumen que la volatilidad del portafolio (σ) es constante en el tiempo. Pero hemos visto que durante la crisis de 2020 la volatilidad se disparó. ¿Cómo modelamos una σ que cambia cada día?"
+"VaR y CVaR asumen que la volatilidad del portafolio $(\sigma)$ es constante en el tiempo. Pero hemos visto que durante la crisis de 2020 la volatilidad se disparó. ¿Cómo modelamos una σ que cambia cada día?"
 
 **Anticipar:**  
-Los modelos GARCH (Generalized Autoregressive Conditional Heteroskedasticity) permiten estimar una σ_t que varía en el tiempo. Al combinarse con el VaR paramétrico, producen el **VaR condicional**: una medida de riesgo que se actualiza diariamente conforme cambia la volatilidad del mercado.
+Los modelos GARCH (Generalized Autoregressive Conditional Heteroskedasticity) permiten estimar una $\sigma_{t}$ que varía en el tiempo. Al combinarse con el VaR paramétrico, producen el **VaR condicional**: una medida de riesgo que se actualiza diariamente conforme cambia la volatilidad del mercado.
 
-**Materiales:**  
-- Los mismos rendimientos del portafolio de esta sesión
-- La librería `rugarch` ya está en la lista del curso
-- Revisar brevemente el concepto de autocorrelación en los cuadrados de los rendimientos (el hecho estilizado que motiva GARCH)
+**Materiales:**
+
+-   Los mismos rendimientos del portafolio de esta sesión
+-   La librería `rugarch` ya está en la lista del curso
+-   Revisar brevemente el concepto de autocorrelación en los cuadrados de los rendimientos (el hecho estilizado que motiva GARCH)
+
