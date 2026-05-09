@@ -375,7 +375,7 @@ Simulaciones  VaR(95%) estable    CVaR(95%) estable
 
 En la práctica institucional, los sistemas de riesgo usan entre 100,000 y 1,000,000 simulaciones para reportar el CVaR con confianza suficiente.
 
-### 4.3 La "Trampa de la Cola": Por qué el CVaR es más exigente
+**4.3 La "Trampa de la Cola": Por qué el CVaR es más exigente
 
 Para entender por qué necesitamos tantas simulaciones, piensa en la **disponibilidad de datos** en la zona crítica.
 
