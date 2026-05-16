@@ -294,6 +294,7 @@ Donde:
 * $\phi(z_\alpha) = 0.1031$
 
 **Cálculo del CVaR:**
+
 $$
 \begin{aligned}
 CVaR(95\%) &= 0.0004 - 0.0150 \times \frac{0.1031}{0.05} \\
